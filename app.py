@@ -1,8 +1,9 @@
 import os
 import pathlib
-from flask import Flask
+from flask import Flask, render_template
 from dotenv import load_dotenv
-from flask_login import LoginManager
+from flask_login import LoginManager, login_required
+from blueprints import auth
 
 from database.db import db
 from database.models import User
@@ -19,12 +20,18 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'login'
+login_manager.login_view = 'auth.login'
 
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(user_id)
 
-with app.app_context():
-    db.create_all()
+
+@app.route('/')
+@login_required
+def index():
+    return render_template('index.html')
+
+
+app.register_blueprint(auth.auth_bp)
