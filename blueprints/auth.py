@@ -1,16 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for
 from flask_login import login_user, login_required, logout_user
-from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField
-from wtforms.validators import DataRequired
+from utils.forms import LoginForm
 from database.models import User
-
-
-class LoginForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired("Username is required.")])
-    password = PasswordField('Password', validators=[DataRequired("Password is required.")])
-    submit = SubmitField('Login')
-
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 
