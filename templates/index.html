@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | Uzi Sandbox{% endblock %}
+
+{% block css_files %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+{% endblock %}
+
+{% block content %}
+  <div class="dashboard-container">
+    <div class="api-key-section">
+      <h2>Your API Key</h2>
+      <div class="api-key-wrapper">
+        <code id="apiKeyDisplay">{{ current_user.api_key }}</code>
+        <button class="copy-btn" id="copyApiButton">Copy</button>
+      </div>
+    </div>
+
+    <div class="services-grid">
+      <a href="#" class="service-card phone-card">
+        <div class="card-icon">📱</div>
+        <h3>Phone Number Verification</h3>
+        <p>View all SMS logs</p>
+        <span class="card-link">Access Dashboard</span>
+      </a>
+      <a href="#" class="service-card email-card">
+        <div class="card-icon">✉️</div>
+        <h3>Email Verification</h3>
+        <p>View all email verification logs</p>
+        <span class="card-link">Access Dashboard</span>
+      </a>
+    </div>
+  </div>
+
+  <script>
+    const apiKeySpan = document.getElementById('apiKeyDisplay');
+    const text = apiKeySpan.innerText;
+    const copyApiButton = document.getElementById('copyApiButton');
+
+    copyApiButton.addEventListener('click', copyApiKey)
+
+    function copyApiKey() {
+      navigator.clipboard.writeText(text).then(() => {
+        const originalText = copyApiButton.innerHTML;
+        copyApiButton.innerHTML = 'Copied!';
+        setTimeout(() => {
+          copyApiButton.innerHTML = originalText;
+        }, 2000);
+      }).catch(err => {
+        console.error('Failed to copy: ', err);
+        alert('Could not copy API key. Select it manually.');
+      });
+    }
+  </script>
+{% endblock %}
