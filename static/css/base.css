@@ -32,6 +32,10 @@ header {
     flex-wrap: wrap;
 }
 
+.header-container a {
+    text-decoration: none;
+}
+
 .site-title {
     font-size: 1.6rem;
     font-weight: 600;
