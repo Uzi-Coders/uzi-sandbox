@@ -1,6 +1,7 @@
 import uuid
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
 
 from .db import db
 
@@ -21,3 +22,21 @@ class User(db.Model, UserMixin):
 
     def __repr__(self):
         return '<User %r>' % self.username
+
+
+class SmsLog(db.Model):
+    __tablename__ = 'sms_logs'
+
+    id = db.Column(db.Integer, primary_key=True)
+    receptor = db.Column(db.String(20), nullable=False)
+    message = db.Column(db.Text(), nullable=False)
+    sender = db.Column(db.String(20), nullable=True)
+    date = db.Column(db.DateTime(), nullable=False, default=datetime.now())
+    statustext = db.Column(db.String(100), nullable=False)
+    status = db.Column(db.Integer(), nullable=False)
+
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    user = db.relationship('User')
+
+    def __repr__(self):
+        return '<SmsLog %r>' % self.message
