@@ -1,10 +1,20 @@
 import re
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, render_template
+from flask_login import login_required, current_user
 from utils.decorators import require_api_key
 from database.models import SmsLog
 from database.db import db
 
 sms_bp = Blueprint('sms', __name__, url_prefix='/sms')
+
+
+@sms_bp.route('/panel')
+@login_required
+def panel():
+    page = request.args.get('page', 1, type=int)
+    per_page = 10
+    paginated_logs = SmsLog.query.filter_by(user_id=current_user.id).order_by(SmsLog.date.desc()).paginate(page=page, per_page=per_page, error_out=False)
+    return render_template('sms_panel.html', logs=paginated_logs)
 
 
 def validate_sms_data(data):

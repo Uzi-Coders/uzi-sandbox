@@ -1,0 +1,204 @@
+.sms-dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.api-key-section {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e2e8f0;
+}
+
+.api-key-section h2 {
+  font-size: 1.3rem;
+  margin-bottom: 0.8rem;
+  color: #1e2a3a;
+}
+
+.api-key-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #f1f5f9;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid #cbd5e1;
+  flex-wrap: wrap;
+}
+
+.api-key-wrapper code {
+  font-family: 'Courier New', monospace;
+  font-size: 1rem;
+  background: transparent;
+  color: #0f172a;
+  letter-spacing: 0.5px;
+  word-break: break-all;
+  flex: 1;
+}
+
+.copy-btn {
+  background: #3b82f6;
+  border: none;
+  color: white;
+  padding: 6px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+}
+
+.copy-btn:hover {
+  background: #2563eb;
+}
+
+.sender-info {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border-radius: 16px;
+  padding: 1.2rem 2rem;
+  margin-bottom: 2rem;
+  border-right: 5px solid #0284c7;
+}
+
+.sender-info h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  color: #0f172a;
+}
+
+.sender-number {
+  font-family: 'Courier New', monospace;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #0284c7;
+  background: white;
+  display: inline-block;
+  padding: 5px 15px;
+  border-radius: 12px;
+  margin: 0.5rem 0;
+  letter-spacing: 1px;
+}
+
+.logs-section h3 {
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  color: #1e2a3a;
+}
+
+.table-responsive {
+  overflow-x: auto;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+}
+
+.sms-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.sms-table th,
+.sms-table td {
+  padding: 12px 15px;
+  text-align: right;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.sms-table th {
+  background: #f8fafc;
+  font-weight: 600;
+  color: #1e2a3a;
+  border-bottom: 2px solid #cbd5e1;
+}
+
+.sms-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+.message-cell {
+  max-width: 300px;
+  word-break: break-word;
+  white-space: normal;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.status-badge.success {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.empty-logs {
+  text-align: center;
+  padding: 2rem;
+  background: white;
+  border-radius: 16px;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-top: 25px;
+  flex-wrap: wrap;
+}
+
+.page-link {
+  display: inline-block;
+  padding: 8px 16px;
+  background: white;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  color: #3b82f6;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.page-link:hover {
+  background: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+}
+
+.page-link.disabled {
+  color: #94a3b8;
+  background: #f1f5f9;
+  pointer-events: none;
+}
+
+.page-current {
+  padding: 8px 16px;
+  background: #f1f5f9;
+  border-radius: 8px;
+  color: #1e293b;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .sms-table th,
+  .sms-table td {
+    padding: 8px 10px;
+    font-size: 0.8rem;
+  }
+
+  .message-cell {
+    max-width: 150px;
+  }
+
+  .sender-number {
+    font-size: 1.3rem;
+  }
+}

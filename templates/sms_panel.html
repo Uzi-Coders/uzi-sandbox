@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}Sms Logs | Uzi Sandbox{% endblock %}
+
+{% block css_files %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/sms.css') }}">
+{% endblock %}
+
+{% block content %}
+  <div class="sms-dashboard">
+    <div class="api-key-section">
+      <h2>Your API Key</h2>
+      <div class="api-key-wrapper">
+        <code id="apiKeyDisplay">{{ current_user.api_key }}</code>
+        <button class="copy-btn" id="copyApiButton">Copy</button>
+      </div>
+    </div>
+
+    <div class="sender-info">
+      <h3>Your sender number</h3>
+      <div class="sender-number">
+        {{ current_user.sms_sender }}
+      </div>
+      <p class="sender-note">This number is generated randomly for you and will be returned in every request.</p>
+    </div>
+
+    <div class="logs-section">
+      <h3>SMS Logs</h3>
+
+      {% if logs.items %}
+        <div class="table-responsive">
+          <table class="sms-table">
+            <thead>
+            <tr>
+              <th>id</th>
+              <th>receptor</th>
+              <th>message</th>
+              <th>status</th>
+              <th>date</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for log in logs.items %}
+              <tr>
+                <td>{{ log.id }}</td>
+                <td>{{ log.receptor }}</td>
+                <td class="message-cell">{{ log.message }}</td>
+                <td>
+                  <span class="status-badge success">{{ log.statustext }}</span>
+                </td>
+                <td>{{ log.date.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pagination">
+          {% if logs.has_prev %}
+            <a href="{{ url_for('sms.panel', page=logs.prev_num) }}" class="page-link">Previous</a>
+          {% else %}
+            <span class="page-link disabled">Previous</span>
+          {% endif %}
+
+          <span class="page-current">Page {{ logs.page }} of {{ logs.pages }}</span>
+
+          {% if logs.has_next %}
+            <a href="{{ url_for('sms.panel', page=logs.next_num) }}" class="page-link">Next</a>
+          {% else %}
+            <span class="page-link disabled">Next</span>
+          {% endif %}
+        </div>
+      {% else %}
+        <p class="empty-logs">There's not any log yet.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <script>
+    const apiKeySpan = document.getElementById('apiKeyDisplay');
+    const text = apiKeySpan.innerText;
+    const copyApiButton = document.getElementById('copyApiButton');
+
+    copyApiButton.addEventListener('click', copyApiKey)
+
+    function copyApiKey() {
+      navigator.clipboard.writeText(text).then(() => {
+        const originalText = copyApiButton.innerHTML;
+        copyApiButton.innerHTML = 'Copied!';
+        setTimeout(() => {
+          copyApiButton.innerHTML = originalText;
+        }, 2000);
+      }).catch(err => {
+        console.error('Failed to copy: ', err);
+        alert('Could not copy API key. Select it manually.');
+      });
+    }
+  </script>
+{% endblock %}
