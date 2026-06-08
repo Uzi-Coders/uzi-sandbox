@@ -1,4 +1,5 @@
 import uuid
+from random import randint
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
@@ -13,6 +14,7 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
     api_key = db.Column(db.String(64), unique=True, nullable=False, default=lambda: str(uuid.uuid4()))
+    sms_sender = db.Column(db.Integer(), default=randint(10000, 99999))
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
@@ -30,8 +32,7 @@ class SmsLog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     receptor = db.Column(db.String(20), nullable=False)
     message = db.Column(db.Text(), nullable=False)
-    sender = db.Column(db.String(20), nullable=True)
-    date = db.Column(db.DateTime(), nullable=False, default=datetime.now())
+    date = db.Column(db.DateTime(), nullable=False, default=datetime.now)
     statustext = db.Column(db.String(100), nullable=False)
     status = db.Column(db.Integer(), nullable=False)
 
