@@ -100,17 +100,64 @@ def fake_pay(transaction_id):
             transaction.track_id = str(random.randint(10000, 99999))
             transaction.card_no = masked_card
             transaction.hashed_card_no = card_hash
-            transaction.payment_amount = transaction.amount
             transaction.payment_date = datetime.now()
             db.session.commit()
 
             return redirect(
-                f"{transaction.callback}?status=10&track_id={transaction.track_id}&id={transaction.transaction_id}&order_id={transaction.order_id}&amount={transaction.amount}&card_no={masked_card}")
+                f"{transaction.callback}?status={transaction.status}&track_id={transaction.track_id}&id={transaction.transaction_id}&order_id={transaction.order_id}&amount={transaction.amount}&card_no={masked_card}")
 
         transaction.status = 2
         db.session.commit()
-        return redirect(f"{transaction.callback}?status=2&id={transaction.transaction_id}&order_id={transaction.order_id}")
+        return redirect(
+            f"{transaction.callback}?status={transaction.status}&id={transaction.transaction_id}&order_id={transaction.order_id}")
 
     if transaction.status == 1:
         return render_template('fake_pay.html', transaction=transaction)
     abort(404)
+
+
+@gateway_bp.route('/payment/verify', methods=['POST'])
+@require_api_key
+def payment_verify():
+    data = request.get_json(silent=True)
+    if not data:
+        return jsonify({'error': "بدنه درخواست باید JSON باشد."}), 400
+
+    transaction_id = data.get('id')
+    order_id = data.get('order_id')
+    if not transaction_id or not order_id:
+        return jsonify(
+            {'error_code': 31, 'error_message': "کد تراکنش (id) یا شماره سفارش (order_id) نباید خالی باشد."}), 406
+
+    if not isinstance(transaction_id, str) or not isinstance(order_id, str):
+        return jsonify({'error_code': 31, 'error_message': "پارامترها باید از نوع رشته باشند."}), 406
+
+    transaction = PaymentTransaction.query.filter_by(transaction_id=transaction_id, order_id=order_id).first()
+    if not transaction:
+        return jsonify({'error_code': 52, 'error_message': "استعلام نتیجه ای نداشت."}), 400
+
+    if transaction.status == 10:
+        transaction.status = 100
+        transaction.verify_date = datetime.now()
+        db.session.commit()
+
+        return jsonify({
+            "status": "100",
+            "track_id": transaction.track_id,
+            "id": transaction.transaction_id,
+            "order_id": transaction.order_id,
+            "amount": str(transaction.amount),
+            "date": str(int(transaction.created_at.timestamp())),
+            "payment": {
+                "track_id": transaction.track_id,
+                "amount": str(transaction.amount),
+                "card_no": transaction.card_no,
+                "hashed_card_no": transaction.hashed_card_no,
+                "date": str(int(transaction.payment_date.timestamp()))
+            },
+            "verify": {
+                "date": str(int(transaction.verify_date.timestamp()))
+            }
+        }), 200
+
+    return jsonify({'error_code': 53, 'error_message': 'تایید پرداخت امکان پذیر نیست.'}), 405
