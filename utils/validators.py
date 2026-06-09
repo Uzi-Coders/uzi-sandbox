@@ -17,3 +17,11 @@ def validate_phone_number(number):
     if not any(re.match(p, number) for p in patterns):
         return {'error': "فرمت شماره نامعتبر است."}, 411
     return None
+
+
+def validate_email(email):
+    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+
+    if not re.match(pattern, email.strip()):
+        return {'error': "فرمت ایمیل نامعتبر است."}, 400
+    return None

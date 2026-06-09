@@ -3,7 +3,7 @@ import pathlib
 from flask import Flask, render_template
 from dotenv import load_dotenv
 from flask_login import LoginManager, login_required
-from blueprints import auth, sms
+from blueprints import auth, sms, gateway
 
 from database.db import db
 from database.models import User
@@ -36,3 +36,4 @@ def index():
 
 app.register_blueprint(auth.auth_bp)
 app.register_blueprint(sms.sms_bp)
+app.register_blueprint(gateway.gateway_bp)
