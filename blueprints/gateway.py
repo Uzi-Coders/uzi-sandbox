@@ -10,7 +10,7 @@ from urllib.parse import urlparse
 from database.models import PaymentTransaction
 from database.db import db
 
-gateway_bp = Blueprint('gateway', __name__, url_prefix='/gateway')
+gateway_bp = Blueprint('gateway', __name__, url_prefix='/sandbox/gateway')
 
 
 @gateway_bp.route('/panel', methods=['GET'])

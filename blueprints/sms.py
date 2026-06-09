@@ -6,7 +6,7 @@ from utils.helpers import normalize_phone_number
 from database.models import SmsLog
 from database.db import db
 
-sms_bp = Blueprint('sms', __name__, url_prefix='/sms')
+sms_bp = Blueprint('sms', __name__, url_prefix='/sandbox/sms')
 
 
 @sms_bp.route('/panel')

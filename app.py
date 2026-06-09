@@ -28,7 +28,7 @@ def load_user(user_id):
     return User.query.get(user_id)
 
 
-@app.route('/')
+@app.route('/sandbox/')
 @login_required
 def index():
     return render_template('index.html')
