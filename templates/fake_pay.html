@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}تأیید پرداخت | درگاه آزمایشی{% endblock %}
+
+{% block css_files %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/fake.css') }}">
+{% endblock %}
+
+{% block content %}
+  <div class="payment-container">
+    <div class="payment-card">
+      <h2>درگاه پرداخت آزمایشی</h2>
+      <div class="payment-amount">
+        مبلغ: <strong>{{ "{:,}".format(transaction.amount).replace(',', '٬') }}</strong> ریال
+      </div>
+      <p>شماره سفارش: <strong>{{ transaction.order_id }}</strong></p>
+      <p>لطفاً برای ادامه، گزینه مورد نظر را انتخاب کنید.</p>
+      <form method="POST">
+        <div class="button-group">
+          <button type="submit" name="action" value="confirm" class="btn-success">تایید پرداخت</button>
+          <button type="submit" name="action" value="cancel" class="btn-danger">انصراف</button>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

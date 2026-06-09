@@ -1,7 +1,10 @@
-from flask import Blueprint, request, render_template, jsonify
+import uuid
+import random
+from datetime import datetime
+from flask import Blueprint, request, render_template, jsonify, abort, redirect
 from utils.decorators import require_api_key
 from utils.validators import validate_phone_number, validate_email, require_fields
-from utils.helpers import normalize_phone_number
+from utils.helpers import normalize_phone_number, generate_random_card_number, hash_card_number
 from urllib.parse import urlparse
 from database.models import PaymentTransaction
 from database.db import db
@@ -69,14 +72,45 @@ def payment():
         order_id=data['order_id'],
         amount=data['amount'],
         callback=data['callback'],
+        transaction_id=str(uuid.uuid4().hex),
         name=data['name'] if 'name' in data else None,
         phone=normalize_phone_number(data['phone']) if 'phone' in data else None,
         mail=data['mail'] if 'mail' in data else None,
-        desc=data['desc'] if 'desc' in data else None,
+        description=data['desc'] if 'desc' in data else None,
         user_id=request.current_user.id
     )
     db.session.add(transaction)
     db.session.commit()
 
     return jsonify(
-        {'id': transaction.transaction_id, 'link': f"{request.host_url.rstrip('/')}/fake-pay/{transaction.link}"}), 201
+        {'id': transaction.transaction_id,
+         'link': f"{request.host_url.rstrip('/')}/gateway/fake-pay/{transaction.transaction_id}"}), 201
+
+
+@gateway_bp.route('/fake-pay/<string:transaction_id>', methods=['GET', 'POST'])
+def fake_pay(transaction_id):
+    transaction = PaymentTransaction.query.filter_by(transaction_id=transaction_id).first_or_404()
+    if request.method == 'POST':
+        action = request.form.get('action')
+        if action == 'confirm':
+            masked_card, full_card = generate_random_card_number()
+            card_hash = hash_card_number(full_card)
+
+            transaction.status = 10
+            transaction.track_id = str(random.randint(10000, 99999))
+            transaction.card_no = masked_card
+            transaction.hashed_card_no = card_hash
+            transaction.payment_amount = transaction.amount
+            transaction.payment_date = datetime.now()
+            db.session.commit()
+
+            return redirect(
+                f"{transaction.callback}?status=10&track_id={transaction.track_id}&id={transaction.transaction_id}&order_id={transaction.order_id}&amount={transaction.amount}&card_no={masked_card}")
+
+        transaction.status = 2
+        db.session.commit()
+        return redirect(f"{transaction.callback}?status=2&id={transaction.transaction_id}&order_id={transaction.order_id}")
+
+    if transaction.status == 1:
+        return render_template('fake_pay.html', transaction=transaction)
+    abort(404)
