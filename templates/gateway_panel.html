@@ -12,8 +12,9 @@
       <h2>Your API Key</h2>
       <div class="api-key-wrapper">
         <code id="apiKeyDisplay">{{ current_user.api_key }}</code>
-        <button class="copy-btn">Copy</button>
+        <button class="copy-btn" id="copyApiButton">Copy</button>
       </div>
+      <p class="api-note">Use this key in the <code>X-API-Key</code> header when calling endpoints.</p>
     </div>
 
     <div class="transactions-section">
@@ -34,10 +35,10 @@
             <tbody>
             {% for tx in transactions.items %}
               <tr>
-                <td><code>{{ tx.transaction_id }}</code></td>
-                <td>{{ tx.order_id }}</td>
-                <td>{{ "{:,}".format(tx.amount).replace(',', '٬') }}</td>
-                <td>
+                <td data-label="Transaction ID"><code>{{ tx.transaction_id }}</code></td>
+                <td data-label="Order ID">{{ tx.order_id }}</td>
+                <td data-label="Amount (IRR)">{{ "{:,}".format(tx.amount).replace(',', '٬') }}</td>
+                <td data-label="Status">
                   {% if tx.status == 1 %}
                     <span class="status-badge pending">Pending ({{ tx.status }})</span>
                   {% elif tx.status == 2 %}
@@ -50,7 +51,7 @@
                     <span class="status-badge unknown">{{ tx.status }}</span>
                   {% endif %}
                 </td>
-                <td>{{ tx.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                <td data-label="Date">{{ tx.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
               </tr>
             {% endfor %}
             </tbody>

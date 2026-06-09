@@ -37,6 +37,7 @@
   letter-spacing: 0.5px;
   word-break: break-all;
   flex: 1;
+  min-width: 0;
 }
 
 .copy-btn {
@@ -48,16 +49,12 @@
   cursor: pointer;
   font-size: 0.9rem;
   transition: background 0.2s;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .copy-btn:hover {
   background: #2563eb;
-}
-
-.api-note {
-  margin-top: 12px;
-  font-size: 0.85rem;
-  color: #475569;
 }
 
 .transactions-section h3 {
@@ -72,6 +69,7 @@
   border-radius: 16px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   border: 1px solid #e2e8f0;
+  -webkit-overflow-scrolling: touch;
 }
 
 .transactions-table {
@@ -83,7 +81,7 @@
 .transactions-table th,
 .transactions-table td {
   padding: 12px 15px;
-  text-align: left;
+  text-align: right;
   border-bottom: 1px solid #e2e8f0;
 }
 
@@ -92,10 +90,25 @@
   font-weight: 600;
   color: #1e2a3a;
   border-bottom: 2px solid #cbd5e1;
+  white-space: nowrap;
+}
+
+.transactions-table tbody tr:last-child td {
+  border-bottom: none;
 }
 
 .transactions-table tbody tr:hover {
   background: #f8fafc;
+}
+
+.transactions-table td code {
+  font-family: 'Courier New', monospace;
+  background: #f1f5f9;
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  word-break: break-word;
+  white-space: normal;
 }
 
 .status-badge {
@@ -104,6 +117,12 @@
   border-radius: 20px;
   font-size: 0.8rem;
   font-weight: 500;
+  white-space: nowrap;
+}
+
+.status-badge.success {
+  background: #dcfce7;
+  color: #15803d;
 }
 
 .status-badge.pending {
@@ -113,30 +132,33 @@
 
 .status-badge.failed {
   background: #fee2e2;
-  color: #b91c1c;
+  color: #991b1b;
 }
 
 .status-badge.waiting {
-  background: #fed7aa;
-  color: #9a3412;
-}
-
-.status-badge.success {
-  background: #dcfce7;
-  color: #15803d;
+  background: #e0e7ff;
+  color: #1e40af;
 }
 
 .status-badge.unknown {
   background: #e2e8f0;
-  color: #475569;
+  color: #334155;
 }
 
-/* Pagination (reuse from sms.css) */
+.empty {
+  text-align: center;
+  padding: 2rem;
+  background: white;
+  border-radius: 16px;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+}
+
 .pagination {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 15px;
+  gap: 12px;
   margin-top: 25px;
   flex-wrap: wrap;
 }
@@ -150,6 +172,8 @@
   color: #3b82f6;
   text-decoration: none;
   transition: all 0.2s;
+  font-size: 0.9rem;
+  cursor: pointer;
 }
 
 .page-link:hover {
@@ -170,21 +194,146 @@
   border-radius: 8px;
   color: #1e293b;
   font-weight: 500;
+  font-size: 0.9rem;
 }
 
-.empty {
-  text-align: center;
-  padding: 2rem;
-  background: white;
-  border-radius: 16px;
-  color: #64748b;
-  border: 1px solid #e2e8f0;
-}
+/* ===== RESPONSIVE (same as sms.css) ===== */
+@media (max-width: 900px) {
+  .api-key-section {
+    padding: 1.25rem 1.5rem;
+  }
 
-@media (max-width: 768px) {
   .transactions-table th,
   .transactions-table td {
-    padding: 8px 10px;
-    font-size: 0.8rem;
+    padding: 10px 12px;
+  }
+}
+
+@media (max-width: 640px) {
+  .api-key-section {
+    padding: 1.1rem 1.1rem;
+    border-radius: 12px;
+    margin-bottom: 1.25rem;
+  }
+
+  .api-key-section h2 {
+    font-size: 1.1rem;
+  }
+
+  .api-key-wrapper {
+    flex-direction: row;
+    gap: 8px;
+    padding: 10px 12px;
+  }
+
+  .api-key-wrapper code {
+    font-size: 0.82rem;
+    letter-spacing: 0;
+  }
+
+  .copy-btn {
+    padding: 6px 12px;
+    font-size: 0.82rem;
+  }
+
+  .transactions-section h3 {
+    font-size: 1.1rem;
+  }
+
+  .table-responsive {
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    border: none;
+    overflow-x: visible;
+  }
+
+  .transactions-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .transactions-table,
+  .transactions-table tbody,
+  .transactions-table tr,
+  .transactions-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .transactions-table tbody tr {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    border: 1px solid #e2e8f0;
+    margin-bottom: 0.875rem;
+    padding: 0.25rem 0;
+    overflow: hidden;
+  }
+
+  .transactions-table tbody tr:last-child {
+    margin-bottom: 0;
+  }
+
+  .transactions-table td {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 9px 14px;
+    border-bottom: 1px solid #f1f5f9;
+    text-align: right;
+    font-size: 0.875rem;
+  }
+
+  .transactions-table td:last-child {
+    border-bottom: none;
+  }
+
+  .transactions-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #64748b;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+    padding-top: 2px;
+    text-align: left;
+  }
+
+  /* Fix for long transaction IDs / code blocks */
+  .transactions-table td code {
+    word-break: break-word;
+    white-space: normal;
+    display: inline-block;
+    max-width: 100%;
+    text-align: right;
+  }
+
+  .pagination {
+    gap: 8px;
+    margin-top: 20px;
+  }
+
+  .page-link,
+  .page-current {
+    padding: 7px 13px;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .api-key-wrapper code {
+    font-size: 0.75rem;
+  }
+
+  .transactions-table td {
+    padding: 8px 12px;
+    font-size: 0.82rem;
   }
 }

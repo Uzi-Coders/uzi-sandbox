@@ -14,6 +14,7 @@
         <code id="apiKeyDisplay">{{ current_user.api_key }}</code>
         <button class="copy-btn" id="copyApiButton">Copy</button>
       </div>
+      <p class="api-note">Use this key in the <code>X-API-Key</code> header when calling endpoints.</p>
     </div>
 
     <div class="sender-info">
@@ -42,13 +43,13 @@
             <tbody>
             {% for log in logs.items %}
               <tr>
-                <td>{{ log.id }}</td>
-                <td>{{ log.receptor }}</td>
-                <td class="message-cell">{{ log.message }}</td>
-                <td>
+                <td data-label="ID">{{ log.id }}</td>
+                <td data-label="Receptor">{{ log.receptor }}</td>
+                <td class="message-cell" data-label="Message">{{ log.message }}</td>
+                <td data-label="Status">
                   <span class="status-badge success">{{ log.statustext }}</span>
                 </td>
-                <td>{{ log.date.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                <td data-label="Date">{{ log.date.strftime('%Y-%m-%d %H:%M:%S') }}</td>
               </tr>
             {% endfor %}
             </tbody>
