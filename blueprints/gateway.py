@@ -2,6 +2,7 @@ import uuid
 import random
 from datetime import datetime
 from flask import Blueprint, request, render_template, jsonify, abort, redirect
+from flask_login import login_required, current_user
 from utils.decorators import require_api_key
 from utils.validators import validate_phone_number, validate_email, require_fields
 from utils.helpers import normalize_phone_number, generate_random_card_number, hash_card_number
@@ -10,6 +11,18 @@ from database.models import PaymentTransaction
 from database.db import db
 
 gateway_bp = Blueprint('gateway', __name__, url_prefix='/gateway')
+
+
+@gateway_bp.route('/panel', methods=['GET'])
+@login_required
+def panel():
+    page = request.args.get('page', 1, type=int)
+    per_page = 10
+    paginated = (PaymentTransaction.query.filter_by(user_id=current_user.id)
+                 .order_by(PaymentTransaction.created_at.desc())
+                 .paginate(page=page, per_page=per_page, error_out=False))
+
+    return render_template('gateway_panel.html', transactions=paginated)
 
 
 def validate_payment_data(data):
