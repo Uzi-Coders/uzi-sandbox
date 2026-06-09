@@ -1,7 +1,8 @@
-import re
 from flask import Blueprint, request, jsonify, render_template
 from flask_login import login_required, current_user
 from utils.decorators import require_api_key
+from utils.validators import validate_phone_number, require_fields
+from utils.helpers import normalize_phone_number
 from database.models import SmsLog
 from database.db import db
 
@@ -13,15 +14,17 @@ sms_bp = Blueprint('sms', __name__, url_prefix='/sms')
 def panel():
     page = request.args.get('page', 1, type=int)
     per_page = 10
-    paginated_logs = SmsLog.query.filter_by(user_id=current_user.id).order_by(SmsLog.date.desc()).paginate(page=page, per_page=per_page, error_out=False)
+    paginated_logs = (SmsLog.query.filter_by(user_id=current_user.id)
+                      .order_by(SmsLog.date.desc()).
+                      paginate(page=page, per_page=per_page, error_out=False))
+
     return render_template('sms_panel.html', logs=paginated_logs)
 
 
 def validate_sms_data(data):
-    if not data.get('receptor'):
-        return {'error': "شماره گیرنده (receptor) الزامی است."}, 400
-    if not data.get('message'):
-        return {'error': "متن پیام (message) الزامی است."}, 400
+    error = require_fields(data, ['receptor', 'message'])
+    if error:
+        return error
 
     if not isinstance(data['receptor'], str):
         return {'error': "شماره گیرنده باید از نوع رشته (string) باشد."}, 400
@@ -32,30 +35,11 @@ def validate_sms_data(data):
         return {'error': "طول متن پیام نباید بیشتر از 900 کاراکتر باشد."}, 413
 
     receptor = data['receptor'].strip()
-    patterns = [
-        r'^09[0-9]{9}$',
-        r'^\+989[0-9]{9}$',
-        r'^9[0-9]{9}$'
-    ]
-    if not any(re.match(p, receptor) for p in patterns):
-        return {'error': "فرمت شماره گیرنده نامعتبر است."}, 411
+    error = validate_phone_number(receptor)
+    if error:
+        return error
+
     return None
-
-
-def normalize_phone_number(number):
-    number = number.strip()
-
-    if re.match(r'^09[0-9]{9}$', number):
-        return number
-
-    elif re.match(r'^\+989[0-9]{9}$', number):
-        return '0' + number[3:]
-
-    elif re.match(r'^9[0-9]{9}$', number):
-        return '0' + number
-
-    else:
-        return number
 
 
 @sms_bp.route('/send', methods=['POST'])
