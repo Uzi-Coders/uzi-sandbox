@@ -97,7 +97,7 @@ def payment():
 
     return jsonify(
         {'id': transaction.transaction_id,
-         'link': f"{request.host_url.rstrip('/')}/gateway/fake-pay/{transaction.transaction_id}"}), 201
+         'link': f"{request.host_url.rstrip('/')}/sandbox/gateway/fake-pay/{transaction.transaction_id}"}), 201
 
 
 @gateway_bp.route('/fake-pay/<string:transaction_id>', methods=['GET', 'POST'])
