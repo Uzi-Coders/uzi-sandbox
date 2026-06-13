@@ -11,7 +11,7 @@ from database.models import User
 BASE_DIR = pathlib.Path(__file__).resolve().parent
 load_dotenv(BASE_DIR / '.env')
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/sandbox/static')
 
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + str(BASE_DIR / 'database' / 'db.sqlite3')
