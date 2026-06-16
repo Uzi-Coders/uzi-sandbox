@@ -60,7 +60,7 @@
 
         <div class="pagination">
           {% if transactions.has_prev %}
-            <a href="{{ url_for('gateway.transactions', page=transactions.prev_num) }}" class="page-link">Previous</a>
+            <a href="{{ url_for('gateway.panel', page=transactions.prev_num) }}" class="page-link">Previous</a>
           {% else %}
             <span class="page-link disabled">Previous</span>
           {% endif %}
@@ -68,7 +68,7 @@
           <span class="page-current">Page {{ transactions.page }} of {{ transactions.pages }}</span>
 
           {% if transactions.has_next %}
-            <a href="{{ url_for('gateway.transactions', page=transactions.next_num) }}" class="page-link">Next</a>
+            <a href="{{ url_for('gateway.panel', page=transactions.next_num) }}" class="page-link">Next</a>
           {% else %}
             <span class="page-link disabled">Next</span>
           {% endif %}
