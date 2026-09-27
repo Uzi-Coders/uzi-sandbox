@@ -14,6 +14,11 @@ load_dotenv(BASE_DIR / '.env')
 app = Flask(__name__, static_url_path='/sandbox/static')
 
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+if not app.config['SECRET_KEY']:
+    raise RuntimeError(
+        "SECRET_KEY is not set. Copy .env.example to .env and set a long random value, "
+        "or export SECRET_KEY in the environment."
+    )
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + str(BASE_DIR / 'database' / 'db.sqlite3')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 

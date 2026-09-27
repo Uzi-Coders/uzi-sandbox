@@ -1,1 +1,86 @@
+# Python
 __pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Environment variables - NEVER commit real secrets
+.env
+.env.local
+.env.*.local
+
+# Flask
+instance/
+.webassets-cache
+
+# Databases - NEVER commit real data
+*.sqlite3
+*.sqlite
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+database/db.sqlite3
+database/*.sqlite3
+
+# Logs
+logs/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors / IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+*.sublime-project
+*.sublime-workspace
+
+# Pytest / coverage / mypy
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+*.cover
+.hypothesis/
+.mypy_cache/
+.ruff_cache/
+
+# Docker
+.dockerenv
